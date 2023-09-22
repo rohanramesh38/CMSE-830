@@ -3,7 +3,7 @@ import seaborn as sns
 import pandas as pd
 import altair as alt
 
-df=pd.read_csv('/Users/rohan/Documents/MSU/Classes/CMSE830/ICA SEP20/data.csv')
+df=pd.read_csv('data.csv')
 
 df_area=df[['area_se','area_mean','area_worst','diagnosis']]
 df_area=df_area.replace({'diagnosis':{'M':0,'B':1}})
