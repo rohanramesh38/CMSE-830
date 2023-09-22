@@ -48,9 +48,9 @@ cancer = df[["diagnosis", "perimeter_mean", "perimeter_se", "perimeter_worst"]]
 cancer
 cancer.groupby("diagnosis", group_keys=True).apply(lambda x: x)
 
-per_violin_plot = sns.violinplot(x='perimeter_mean', y='diagnosis', data=cancer, hue='diagnosis', split=True)
+# per_violin_plot = sns.violinplot(x='perimeter_mean', y='diagnosis', data=cancer, hue='diagnosis', split=True)
 
-st.pyplot(per_violin_plot.get_figure())
+# st.pyplot(per_violin_plot.get_figure())
 
 
 s_df=df[['id', 'diagnosis','smoothness_mean','smoothness_se', 'smoothness_worst']]
