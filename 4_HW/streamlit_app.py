@@ -2,11 +2,10 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 import streamlit as st
-import seaborn as sns
 import altair as alt
 
 
-deathRateData = pd.read_csv('/Users/rohan/Documents/MSU/Classes/CMSE830/proj/death_rate_and_causes.csv')
+deathRateData = pd.read_csv('https://raw.githubusercontent.com/rohanramesh38/CMSE-830/main/4_HW/death_rate_and_causes.csv')
 
 toDrop = ['G20',
     'African Region (WHO)',
