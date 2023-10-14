@@ -1,0 +1,7 @@
+altair
+matplotlib
+streamlit
+pandas
+seaborn == 0.12.2
+countryinfo
+plotly.express
