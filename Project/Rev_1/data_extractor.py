@@ -4,12 +4,8 @@ from countryinfo import CountryInfo
 import requests
 import numpy as np
 
-@st.cache_data
-def load_data_all():
-    deathRateData = pd.read_csv('/Users/rohan/Documents/MSU/Classes/CMSE830/CMSE-830/Project/Rev_1/parsed_1.csv')
-    return deathRateData
 
-def extract_data_all():
+def load_data_all():
     deathRateData = pd.read_csv('https://raw.githubusercontent.com/rohanramesh38/CMSE-830/main/4_HW/death_rate_and_causes.csv')
 
     toDrop = ['G20',
@@ -69,20 +65,25 @@ def extract_data_all():
 
     deathRateData["POP"]=deathRateData.apply(get_pop, axis=1)
     st.write(deathRateData)
-    deathRateData.to_csv('parsed.csv', index=False)
+    deathRateData.to_csv('parsed_1.csv', index=False)
 
     return deathRateData
 
 
 def get_pop(row):
     #st.write(row)
-    url = f'https://api.worldbank.org/v2/country/{row["ISO3"]}/indicator/SP.POP.TOTL?date={row["Year"]}&format=json&per_page=1'
-    response = requests.get(url)
-    data = response.json()
-    population = data[1][0]['value']
-    print(row["ISO3"],row["Year"],population)
+    population=None
+    try:
+        url = f'https://api.worldbank.org/v2/country/{row["ISO3"]}/indicator/SP.POP.TOTL?date={row["Year"]}&format=json&per_page=1'
+        response = requests.get(url)
+        data = response.json()
+        population = data[1][0]['value']
+        print(row["ISO3"],row["Year"],population)
+    except:
+         population=None
     return population
 
+#print(load_data_all())
 def get_data_income_based():
     deathRateData = pd.read_csv('https://raw.githubusercontent.com/rohanramesh38/CMSE-830/main/4_HW/death_rate_and_causes.csv')
     Income_Groups = [
@@ -99,19 +100,4 @@ def get_data_income_based():
     #print(deaths_by_income["Entity"].unique())
 
     return deaths_by_income
-def data_with_filtered(deathRateData,array,dropcol=[]):
-    result=deathRateData
-    for column in array:
-        if(len(column)==2):
-            name,compare=column[0],column[1]
-            if(compare=='All'):
-                continue
-            if(type(compare) == list):
-                for _ in compare:
-                    result =result[result[name]==_]
-            else:
-                result =result[result[name]==compare]
-
-    if(len(dropcol)>0):
-        result=result.drop(columns=dropcol)
-    return result
+print(get_data_income_based() )
