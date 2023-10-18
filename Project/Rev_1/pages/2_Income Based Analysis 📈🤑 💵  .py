@@ -103,9 +103,9 @@ deathRateData = deathRateData.groupby( ['Entity','Code'], as_index=False).agg(np
 
 deathRateData['profile'] = deathRateData.apply( profile, axis=1)
 
-url='https://datacatalogfiles.worldbank.org/ddh-published/0037712/DR0090755/CLASS.xlsx'
+url='Project/Rev_1/CLASS_1.xlsx'
 
-df_meta = pd.read_excel(url, sheet_name='List of economies')
+df_meta = pd.read_excel(url)
 
 # st.write(deathRateData)
 # st.write(df_meta)
