@@ -169,7 +169,7 @@ df_plot={"Reason":[],"Count":[]}
 
 # Get the column names based on the sorted values
 sorted_columns = list(sorted_values.index)[::-1]
-sorted_columns=sorted_columns[1:6]
+sorted_columns=sorted_columns[3:8]
 #st.write(sorted_columns)
 
 for val in sorted_columns:
