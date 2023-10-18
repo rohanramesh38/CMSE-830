@@ -162,6 +162,8 @@ f_data=data_with_filtered(deathRateData,[['Entity',selected_country]],["Year","P
 
 f_data=f_data.groupby( ['Entity'] ).agg(np.sum)
 first_row = f_data.iloc[0]
+first_row = pd.to_numeric(first_row, errors='coerce')
+
 sorted_values = first_row.sort_values()
 df_plot={"Reason":[],"Count":[]}
 

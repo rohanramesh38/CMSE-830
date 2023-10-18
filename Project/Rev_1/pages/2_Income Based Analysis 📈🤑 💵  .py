@@ -103,7 +103,7 @@ deathRateData = deathRateData.groupby( ['Entity','Code'], as_index=False).agg(np
 
 deathRateData['profile'] = deathRateData.apply( profile, axis=1)
 
-url='Project/Rev_1/CLASS_1.xlsx'
+url='https://raw.githubusercontent.com/rohanramesh38/CMSE-830/main/Project/Rev_1/CLASS_1.xlsx'
 
 df_meta = pd.read_excel(url)
 
