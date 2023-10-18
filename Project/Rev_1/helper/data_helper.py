@@ -6,7 +6,7 @@ import numpy as np
 
 @st.cache_data
 def load_data_all():
-    deathRateData = pd.read_csv('parsed_1.csv')
+    deathRateData = pd.read_csv('https://raw.githubusercontent.com/rohanramesh38/CMSE-830/main/Project/Rev_1/parsed_1.csv')
     return deathRateData
 
 def extract_data_all():
