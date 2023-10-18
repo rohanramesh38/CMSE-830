@@ -107,8 +107,7 @@ def data_with_filtered(deathRateData,array,dropcol=[]):
             if(compare=='All'):
                 continue
             if(type(compare) == list):
-                for _ in compare:
-                    result =result[result[name]==_]
+                result=result[result[name].isin(compare)]
             else:
                 result =result[result[name]==compare]
 
