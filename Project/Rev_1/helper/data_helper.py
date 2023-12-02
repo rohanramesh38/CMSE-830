@@ -5,8 +5,8 @@ import requests
 import numpy as np
 
 @st.cache_data
-def load_data_all():
-    deathRateData = pd.read_csv('https://raw.githubusercontent.com/rohanramesh38/CMSE-830/main/Project/Rev_1/final_parsed.csv')
+def load_data_all(name='final_parsed'):
+    deathRateData = pd.read_csv(f'https://raw.githubusercontent.com/rohanramesh38/CMSE-830/main/Project/Rev_1/{name}.csv')
     return deathRateData
 
 def extract_data_all():

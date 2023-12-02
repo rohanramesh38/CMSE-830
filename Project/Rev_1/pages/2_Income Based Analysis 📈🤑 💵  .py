@@ -39,7 +39,7 @@ Income_Groups = [
 dreason={}
 
 deathDataByIncome=get_data_income_based()
-deathRateData=load_data_all()
+deathRateData=load_data_all("parsed_1")
 #st.write(deathDataByIncome)
 
 figlist=[]
@@ -93,6 +93,7 @@ st.markdown("### Profiling Causes of Death - Indicator of Income?")
 affects_rich =['High systolic blood pressure','Diet high in sodium ','Diet low in whole grains','Alochol use','Diet low in fruits','Secondhand smoke','Diet low in nuts and seeds','Diet low in Vegetables','Low physical activity','Smoking','High fasting plasma glucose','High body mass index','Drug use','Iron deficiency']
 
 affects_poor = [x for x in list(deathRateData.columns)[3:-3] if x not in affects_rich]
+
 
 def profile(x):
     poor = x[affects_poor].sum()
@@ -150,7 +151,7 @@ with col1:
 with col2:
     line_plots=[]   
     for country in selected_reasons:
-        df=load_data_all()
+        df=load_data_all("parsed_1")
         df_selected = df[ df.Entity==country].copy().reset_index(drop=True)
         df_selected['profile'] = df_selected.apply( profile, axis=1)
         line=alt.Chart(df_selected).mark_line(point=True).encode(
