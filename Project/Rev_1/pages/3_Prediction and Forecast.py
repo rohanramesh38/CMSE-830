@@ -23,4 +23,4 @@ deatRateData =load_data_all()
 
 st.subheader("Life Expectancy Prediction")
 
-st.write(deatRateData.head())
+st.write(deatRateData)
