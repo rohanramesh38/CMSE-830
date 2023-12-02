@@ -24,3 +24,21 @@ deatRateData =load_data_all()
 st.subheader("Life Expectancy Prediction")
 
 st.write(deatRateData)
+
+
+st.subheader("Regression")
+
+models = ['LinearRegression', 'SVR', 'RandomForestRegressor', 'GradientBoostingRegressor']
+
+cols = st.columns(len(models))
+checks=[]
+
+for i in range(0,len(models)):
+    with cols[i]:
+        box=st.checkbox(models[i],value=True)
+        checks.append(box)
+
+selected_models = [value for value, boolean in zip(models, checks) if boolean]
+
+
+
