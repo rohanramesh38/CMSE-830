@@ -159,7 +159,7 @@ Knowing the leading causes of death helps in planning and allocating resources f
             These policies can focus on improving healthcare delivery, enhancing access to care, and implementing measures to reduce the prevalence of specific diseases.
 """)
 
-f_data=data_with_filtered(deathRateData,[['Entity',selected_country]],["Year","POP"])
+f_data=data_with_filtered(deathRateData,[['Entity',selected_country]],["Year","Poputaltion"])
 
 f_data=f_data.groupby( ['Entity'] ).agg(np.sum)
 first_row = f_data.iloc[0]
@@ -207,12 +207,12 @@ with col_2:
 year='All'
 
 year_data = data_with_filtered(deathRateData,[['Year',year],['Entity',selected_country]])
-year_data[r1]=year_data[r1]/year_data["POP"]
+year_data[r1]=year_data[r1]/year_data["Poputaltion"]
 
 #st.write(year_data)
 year_data=year_data.dropna()
 
-fig = px.scatter(year_data, y=r1, x="Year",size="POP", color="Continent",hover_name="Entity", log_x=True, size_max=60)
+fig = px.scatter(year_data, y=r1, x="Year",size="Poputaltion", color="Continent",hover_name="Entity", log_x=True, size_max=60)
 st.plotly_chart(fig, theme="streamlit",use_container_width=True)
 
 st.markdown("""

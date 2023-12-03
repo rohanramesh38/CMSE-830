@@ -60,10 +60,10 @@ def load_data_all():
     
     #st.write(list(deathRateData['ISO3'].unique()))
 
-    #deathRateData["POP"]=deathRateData.apply(get_pop)
+    #deathRateData["Poputaltion"]=deathRateData.apply(get_pop)
 
 
-    deathRateData["POP"]=deathRateData.apply(get_pop, axis=1)
+    deathRateData["Poputaltion"]=deathRateData.apply(get_pop, axis=1)
     st.write(deathRateData)
     deathRateData.to_csv('parsed_1.csv', index=False)
 
