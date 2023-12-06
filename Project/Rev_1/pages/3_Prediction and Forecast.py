@@ -24,12 +24,17 @@ from sklearn.svm import SVC
 from sklearn.metrics import accuracy_score, classification_report
 
 from helper.data_helper import load_data_all,data_with_filtered
-
+st.set_page_config(layout="wide")
 deatRateData =load_data_all()
 
 
 
 st.subheader("Life Expectancy Prediction")
+
+data_on = st.toggle('Show data')
+
+if(data_on):
+    st.write(deatRateData.head())
 
 
 
@@ -52,8 +57,14 @@ selcted_data = selcted_data.sample(frac=1, random_state=42)  # frac=1 indicates 
 train_size = 0.8  # Set the percentage of data for training
 
 split_index = int(len(selcted_data) * train_size)
+scalar_radio = st.radio("Which Scalar to use",["MinMaxScaler", "StandardScaler"])
 
-models = ['LinearRegression', 'RandomForestRegressor','SVR' , 'GradientBoostingRegressor']
+my_scalar = StandardScaler()
+
+if(scalar_radio=="MinMaxScaler"):
+    my_scalar=MinMaxScaler()
+
+models = ['LinearRegression','GradientBoostingRegressor' ,  'RandomForestRegressor','SVR']
 
 cols = st.columns(len(models))
 checks=[]
@@ -69,7 +80,7 @@ selected_models = [value for value, boolean in zip(models, checks) if boolean]
 encoder = LabelEncoder()
 selcted_data = fill_data_with_median()
 
-for column in ["Country Code","ISO3", "Status","Entity"]:
+for column in ["Country Code","ISO3", "Status"]:
     selcted_data[column] = encoder.fit_transform(selcted_data[column])
     selcted_data[column] = encoder.fit_transform(selcted_data[column])
 
@@ -80,15 +91,27 @@ for column in ["Country Code","ISO3", "Status","Entity"]:
 for val in ['Alochol use', 'Unsafe water source', 'Air pollution', 'Low bone mineral density', 'Respitatory Mortality','Cardio vascular Mortality','Poputaltion','Unsafe Sanitation Mortality']:
     selcted_data[val]=selcted_data[val]/selcted_data["Poputaltion"]
 
-train=selcted_data[[ 'Air pollution',  'Respitatory Mortality','Cardio vascular Mortality','Unsafe Sanitation Mortality']]
+train=selcted_data[[ 'Air pollution',  'Respitatory Mortality','Cardio vascular Mortality','Unsafe Sanitation Mortality','Low bone mineral density','Year']]
 
 test=selcted_data["Life Expectancy"]
+train=my_scalar.fit_transform(train)
 
-validation =selcted_data[selcted_data['Year'].isin(list(range(2010,2021))) ]
+validation =selcted_data[selcted_data['Year'].isin(list(range(2000,2021))) ].copy()
+
 validation=validation.sort_values(by='Year', ascending=True)
 
-validation_x=validation[[ 'Air pollution',  'Respitatory Mortality','Cardio vascular Mortality','Unsafe Sanitation Mortality']]
-validation_y=["Life Expectancy"]
+validation_x=validation[[ 'Air pollution',  'Respitatory Mortality','Cardio vascular Mortality','Unsafe Sanitation Mortality','Low bone mineral density','Year']]
+validation_x=my_scalar.transform(validation_x)
+validation_y=validation["Life Expectancy"]
+
+
+
+
+
+
+selcted_data=selcted_data.sort_values(by='Year', ascending=True)
+
+
 
 
 
@@ -96,28 +119,13 @@ X_train ,x_test= train[:split_index], train[split_index:]
 Y_train, y_test = test[:split_index], test[split_index:]
 
 
-selcted_data=selcted_data.sort_values(by='Year', ascending=True)
-validation_full_y=selcted_data["Life Expectancy"]
-
-
-scalar_radio = st.radio("Which Scalar to use",["MinMaxScaler", "StandardScaler"])
-
-my_scalar = StandardScaler()
-
-if(scalar_radio=="MinMaxScaler"):
-    my_scalar=MinMaxScaler()
-
-
-
-X_train= my_scalar.fit_transform(X_train)
-x_test= my_scalar.transform(x_test)
 
 model_list = pd.DataFrame(columns=['Model', 'Training Score', 'Test R2 Score'])
 
 model_preds = pd.DataFrame(columns=['Model','Preds','Year'])
 
 chart_full_x=sorted(list(selcted_data['Year'].unique()))
-chart_full_y=validation_full_y
+chart_full_y=test
 chart_validation_x=list(range(2000,2020))
 
 
@@ -133,10 +141,51 @@ def select_model(model_name):
     predictions = np.round(model.predict(x_test), decimals = 1)
     
     test_r2_score = r2_score(y_test, predictions)
+
+    chart_validation_y=model.predict(validation_x)
     
     model_scores = pd.DataFrame({'Model': [model_name], 'Training Score': [train_score], 'Test R2 Score': [test_r2_score]})
     
     model_list = pd.concat([model_list, model_scores], ignore_index = True)
+    # st.write(train)
+    # st.write(chart_full_y)
+    # st.write(chart_full_x)
+
+    # st.write(validation_x)
+    # st.write(chart_validation_y)
+    
+
+    data = pd.DataFrame({
+    'years': chart_full_x,
+    'Life Expectancy': chart_full_y,
+    })
+    data2=pd.DataFrame({
+    'years':chart_validation_x,
+    'Life Expectancy':chart_validation_y
+    })
+
+    # Create Altair line chart
+    line_chart = alt.Chart(data).mark_line().encode(
+        x='years',
+        y='Life Expectancy',
+    ).properties(
+        width=600,
+        height=300,
+        title=str(model_name)
+    )
+
+    # Create a second line (trace) on the same chart
+    trace_line = alt.Chart(data2).mark_line(color='red').encode(
+        x='years',
+        y='Life Expectancy',
+        
+    )
+
+    # Combine both charts
+    combined_chart = (line_chart + trace_line)
+
+
+    st.altair_chart(combined_chart)
 
 
 
@@ -147,18 +196,27 @@ def change(show):
     if(show):
         st.write(model_list)
 
-col1,col2,col3=st.columns(3)
 
+
+
+
+col_1,col_2=st.columns(2)
 if('LinearRegression' in selected_models):
-    select_model(LinearRegression())
+    
+    with col_1:
+        select_model(LinearRegression())
 
 
-if('SVR' in selected_models):
-    with col2:
-        kernel= st.selectbox('kernel', ['linear', 'poly', 'rbf', 'sigmoid'])
-        degree=  st.slider('degree',min_value=2, max_value=10, value=3, step=1 )
-        select_model(SVR(C = 9.0, epsilon = 0.9, kernel = kernel,degree=degree))
 
+if('GradientBoostingRegressor' in selected_models):
+    with col_2:
+        n_estimator_2 = st.slider('n_estimators',min_value=50, max_value=300, value=100, step=25 )
+        max_depth_2 = st.slider('max_depth ',min_value=1, max_value=20, value=7, step=1 )
+        min_samples_split_2=st.slider('min_samples_split ',min_value=1, max_value=20, value=5, step=1 )
+        select_model(GradientBoostingRegressor(n_estimators=n_estimator_2,max_depth=max_depth_2,min_samples_split=min_samples_split_2,random_state=42))
+
+
+col1,col2=st.columns(2)
 
 if('RandomForestRegressor' in selected_models):
     with col1:
@@ -168,13 +226,12 @@ if('RandomForestRegressor' in selected_models):
         select_model(RandomForestRegressor(n_estimators=n_estimator,max_depth=max_depth,min_samples_split=min_samples_split,random_state=42))
 
 
+if('SVR' in selected_models):
+    with col2:
+        kernel= st.selectbox('kernel', ['linear', 'poly', 'rbf', 'sigmoid'])
+        degree=  st.slider('degree',min_value=2, max_value=10, value=3, step=1 )
+        select_model(SVR(C = 9.0, epsilon = 0.9, kernel = kernel,degree=degree))
 
-if('GradientBoostingRegressor' in selected_models):
-    with col3:
-        n_estimator_2 = st.slider('n_estimators',min_value=50, max_value=300, value=100, step=25 )
-        max_depth_2 = st.slider('max_depth ',min_value=1, max_value=20, value=7, step=1 )
-        min_samples_split_2=st.slider('min_samples_split ',min_value=1, max_value=20, value=5, step=1 )
-        select_model(GradientBoostingRegressor(n_estimators=n_estimator_2,max_depth=max_depth_2,min_samples_split=min_samples_split_2,random_state=42))
 
 
 for i in range(4):
