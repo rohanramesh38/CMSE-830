@@ -21,7 +21,7 @@ st.set_page_config(layout="wide")
 deathRateData=load_data_all()
 
 
-st.title('Death Rate Analysis')
+st.title('Mortality Analysis and Life Expectation Prediction')
 
 st.markdown("""
 Analyzing the death rate of countries and the causes of death is a significant aspect of public health and epidemiology. It provides valuable insights into a country's healthcare system, overall well-being, and helps identify areas for improvement in various sectors
