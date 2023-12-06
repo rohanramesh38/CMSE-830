@@ -84,7 +84,7 @@ train=selcted_data[[ 'Air pollution',  'Respitatory Mortality','Cardio vascular 
 
 test=selcted_data["Life Expectancy"]
 
-validation =selcted_data[selcted_data['Year'].isin(list(range(2000,2021))) ]
+validation =selcted_data[selcted_data['Year'].isin(list(range(2010,2021))) ]
 validation=validation.sort_values(by='Year', ascending=True)
 
 validation_x=validation[[ 'Air pollution',  'Respitatory Mortality','Cardio vascular Mortality','Unsafe Sanitation Mortality']]
