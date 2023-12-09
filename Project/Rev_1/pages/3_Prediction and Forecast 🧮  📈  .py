@@ -31,6 +31,8 @@ deatRateData =load_data_all()
 
 st.subheader("Life Expectancy Prediction")
 
+st.image("https://odh.ohio.gov/wps/wcm/connect/gov/463db345-90eb-4636-a9ba-c4e9e63937ca/GettyImages-831551460_1280x480.jpg?MOD=AJPERES&CACHEID=ROOTWORKSPACE.Z18_K9I401S01H7F40QBNJU3SO1F56-463db345-90eb-4636-a9ba-c4e9e63937ca-o9F8OTq")
+
 data_on = st.toggle('Show data')
 
 if(data_on):

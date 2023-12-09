@@ -46,8 +46,7 @@ figlist=[]
 for income_group in  Income_Groups:
     rank = deathDataByIncome.query( f'Entity=="{income_group}"').sort_values(by='deaths')
 
-
-    rank['Fraction of Deaths'] = rank.deaths * 100 / rank.deaths.sum()
+    rank['Fraction of Deaths'] = rank.deaths * 100 / rank.deaths.sum(numeric_only=True)
 
     rank=rank.sort_values(by='Fraction of Deaths', ascending=False)
     dreason[income_group]=rank['cause'].iloc[0]

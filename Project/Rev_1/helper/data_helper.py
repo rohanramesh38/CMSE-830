@@ -7,7 +7,6 @@ import numpy as np
 @st.cache_data
 def load_data_all(name='final_parsed'):
     deathRateData = pd.read_csv(f'https://raw.githubusercontent.com/rohanramesh38/CMSE-830/main/Project/Rev_1/{name}.csv')
-    print(deathRateData.columns)
     return deathRateData
 
 def extract_data_all():
@@ -95,7 +94,6 @@ def get_data_income_based():
     causes_of_death = deathRateData.columns.drop(['Year','Entity','Code'])
 
     data=deathRateData[ deathRateData.Entity.isin( Income_Groups )].melt( id_vars=['Entity', 'Year'], value_vars=causes_of_death, var_name='cause', value_name='deaths')
-    print(data)
     deaths_by_income = deathRateData[ deathRateData.Entity.isin( Income_Groups )].melt( id_vars=['Entity', 'Year'], value_vars=causes_of_death, var_name='cause', value_name='deaths').drop( columns='Year').groupby( ['Entity','cause'], as_index=False).agg(np.sum)
     #print(deaths_by_income["Entity"].unique())
 
